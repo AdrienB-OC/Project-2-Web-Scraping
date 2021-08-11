@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-
+from get_data import get_all_data
 
 home = 'http://books.toscrape.com/index.html'
 response = requests.get(home)
@@ -18,6 +18,7 @@ for li in catLink.find_all('li'):
 
     if catName == 'Books':
         pass
+
     else:
         for i in range(1,10):
             if i == 1:
@@ -39,7 +40,7 @@ for li in catLink.find_all('li'):
 
 
             with open(str(catName) + '.csv', 'w', encoding="utf-8") as outf:
-                outf.write('url, upc, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url \n')
+                outf.write('url, title, upc, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url \n')
 
 
 
@@ -62,15 +63,13 @@ for li in catLink.find_all('li'):
 
 
 
-
-
                     if response.ok:
 
                         soup2 = BeautifulSoup(response.content, 'html.parser')
                         liens = soup2.find_all('h3')
 
                         pages_details = ""
-                        
+
                         for lienC in liens:
                             a = lienC.find('a')
                             url = a['href']
@@ -81,73 +80,21 @@ for li in catLink.find_all('li'):
                             if response2.ok:
                                 soup3 = BeautifulSoup(response2.content, 'html.parser')
 
-                                # UPC, Prices, Availability
-                                rows = soup3.find_all('tr')
-                                col = 0
-                                for row in rows:
-                                    data = row.find('td')
-                                    if col == 0:
-                                        upc = data.text
-                                    if col == 2:
-                                        price = data.text
-                                    if col == 3:
-                                        pricetax = data.text
-                                    if col == 5:
-                                        availability = data.text
-                                    col += 1
+                                # Get all data
+                                all_data = get_all_data(soup3)
 
-
-                                # Get Title
-                                title = soup3.find('h1').text
-                                title = title.replace(',', '-')
-
-                                # Get Product Description
-                                col = 0
-                                for data in soup3.find_all('p'):
-                                    data = data.get_text()
-                                    if col == 3:
-                                        product_description = data
-                                    col += 1
-
-
-                                # Get Category
-                                col = 0
-                                for data in soup3.find_all('li'):
-                                    data = data
-                                    if col == 2:
-                                        category = data.text
-                                    col += 1
-                                category = category.strip()
-
-                                review_rating = soup3.find('div', {'class': 'col-sm-6 product_main'})
-                                p = review_rating.find('p', {'class': 'star-rating'})
-                                review_rating = p.get('class')
-                                review_rating = str(review_rating)
-                                review_rating = review_rating.replace("['star-rating', '", "")
-                                review_rating = review_rating.replace("']", "")
-                                print(review_rating)
-
-
-                                #Image link
-                                data = soup3.find('img')
-                                imglink = (data['src'])
-                                imglink = imglink.replace('../..', 'http://books.toscrape.com')
-
-                                product_description = product_description.replace(',', '-')
-                                product_description = product_description.replace('"', "'")
-
-
-                                #Test
-                                print('Link : ' + url)
-                                print('Title : ' + title)
+                                # Test
+                                #print('Link : ' + url)
+                                #print('Title : ' + title)
                                 #print('UPC : ' + upc)
                                 #print('Price excluding tax : ' + price)
                                 #print('Price including tax : ' + pricetax)
                                 #print('Number available : ' + availability)
                                 #print('Product description : ' + product_description)
                                 #print('Image link : ' + imglink)
-                                print('Category : ' + category)
-                                pages_details = f"{url}, {upc}, {title}, {price}, {pricetax}, {availability}, {product_description}, {category}, {review_rating}, {imglink} '\n'"
+                                #print('Category : ' + category)
+                                #print(review_rating)
+                                pages_details = f"{url},{all_data}\n'"
                                 #Output CSV
                             outf.write(pages_details)
 
