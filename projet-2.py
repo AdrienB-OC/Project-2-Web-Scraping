@@ -73,9 +73,9 @@ for li in catLink.find_all('li'):
                             # Get all data
                             all_data = get_all_data(soup3)
                             # Download image
+                            download_img(soup3)
 
                             pages_details = f"{url},{all_data}\n'"
                             outf.write(pages_details)
 
-
-
+                        page = ""
