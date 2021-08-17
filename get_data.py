@@ -32,6 +32,8 @@ def get_product_description(soup):
         elif col > 3:
             break
         col += 1
+    if product_description.isspace():
+        product_description = "No description"
     product_description = product_description.replace(',', '')
     product_description = product_description.replace('"', "'")
     return product_description
@@ -89,9 +91,9 @@ def get_all_data(soup):
     # print('Price excluding tax : ' + price)
     # print('Price including tax : ' + pricetax)
     # print('Number available : ' + availability)
-    # print('Product description : ' + product_description)
+    print('Product description : ' + product_description)
     print('Image link : ' + imglink)
-    #print('Category : ' + category)
+    print('Category : ' + category)
     # print(review_rating)
 
     all_data = f"{title},{attributes},{product_description},{category},{review_rating},{imglink}"
