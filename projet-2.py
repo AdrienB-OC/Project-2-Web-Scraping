@@ -51,6 +51,7 @@ for li in catLink.find_all('li'):
 
             for j in range(0, count):
                 page = url_list[j]
+
                 # page = 'http://books.toscrape.com/catalogue/category/books/mystery_3/page-' + str(i) + '.html'
                 response = requests.get(page)
 
@@ -76,7 +77,7 @@ for li in catLink.find_all('li'):
                             # Download image
                             download_img(soup3)
 
-                            pages_details = f"{url},{all_data}\n'"
+                            pages_details = f"{url},{all_data}\n"
                             outf.write(pages_details)
 
                         page = ""

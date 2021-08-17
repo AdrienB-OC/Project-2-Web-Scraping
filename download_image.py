@@ -15,7 +15,9 @@ def download_img(soup):
 
 
     title = soup.find('h1').text
-    title = title.replace(":", " ")
+    remove_characters = [":", "/", '"', "*", "?", "<", ">"]
+    for character in remove_characters:
+        title = title.replace(character, " ")
     url = get_imglink(soup)
     r = requests.get(url)
 
