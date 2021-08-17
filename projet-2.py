@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from get_data import get_all_data
 from download_image import download_img
+from get_category_links import get_cat_links
 
 home = 'http://books.toscrape.com/index.html'
 response = requests.get(home)
@@ -21,28 +22,9 @@ for li in catLink.find_all('li'):
         pass
 
     else:
-        count = 0
-        url_list = []
-
-        for i in range(1, 10):
-
-            if i == 1:
-                print(catName)
-                print(lien)
-                url_list.append(lien)
-                count += 1
-
-            elif i == 2 and (requests.get(lien.replace('index.html', 'page-' + str(i) + '.html')).ok):
-                url_list.append(lien.replace('index.html', 'page-' + str(i) + '.html'))
-                count += 1
-
-            elif i > 2 and (requests.get(lien.replace('index.html', 'page-' + str(i) + '.html')).ok):
-                url_list.append(lien.replace('index.html', 'page-' + str(i) + '.html'))
-                count += 1
-
-            else:
-                break
-
+        url_count = get_cat_links(catName, lien)
+        count = url_count[0]
+        url_list = url_count[1]
 
 
 
