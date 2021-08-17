@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from get_data import get_all_data
+from download_image import download_img
 
 home = 'http://books.toscrape.com/index.html'
 response = requests.get(home)
