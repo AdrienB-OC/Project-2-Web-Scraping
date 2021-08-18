@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from get_data import get_all_data
 from download_image import download_img
 from get_category_links import get_cat_links
+from book_data_class import book
+from output_csv import output_csv
 
 home = 'http://books.toscrape.com/index.html'
 response = requests.get(home)
@@ -22,44 +24,45 @@ for li in catLink.find_all('li'):
         pass
 
     else:
+        # Get all page links for the current category
         url_count = get_cat_links(catName, lien)
         count = url_count[0]
         url_list = url_count[1]
+        # (Re)Initialize list of books' data
+        book_list = []
 
+        for j in range(0, count):
+            page = url_list[j]
 
+            response = requests.get(page)
 
-        with open(str(catName) + '.csv', 'w', encoding="utf-8") as outf:
-            outf.write('url, title, upc, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url \n')
+            if response.ok:
+                soup2 = BeautifulSoup(response.content, 'html.parser')
 
-            for j in range(0, count):
-                page = url_list[j]
+                # Find all book links on that page
+                liens = soup2.find_all('h3')
 
-                # page = 'http://books.toscrape.com/catalogue/category/books/mystery_3/page-' + str(i) + '.html'
-                response = requests.get(page)
+                pages_details = ""
 
-                if response.ok:
-                    soup2 = BeautifulSoup(response.content, 'html.parser')
+                for k in liens:
+                    a = k.find('a')
+                    url = a['href']
+                    url = url.replace('../../../', 'http://books.toscrape.com/catalogue/')
 
-                    # Find all book links on that page
-                    liens = soup2.find_all('h3')
+                    response2 = requests.get(url)
 
-                    pages_details = ""
+                    if response2.ok:
+                        soup3 = BeautifulSoup(response2.content, 'html.parser')
+                        # Get all data
+                        all_data = get_all_data(soup3)
+                        # Download image
+                        download_img(soup3)
+                        # Regroup book data
+                        book_data = book(url, all_data)
+                        # Store book data
+                        book_list.append(book_data)
 
-                    for k in liens:
-                        a = k.find('a')
-                        url = a['href']
-                        url = url.replace('../../../', 'http://books.toscrape.com/catalogue/')
+        # Output csv
+        output_csv(catName, book_list)
 
-                        response2 = requests.get(url)
-
-                        if response2.ok:
-                            soup3 = BeautifulSoup(response2.content, 'html.parser')
-                            # Get all data
-                            all_data = get_all_data(soup3)
-                            # Download image
-                            download_img(soup3)
-
-                            pages_details = f"{url},{all_data}\n"
-                            outf.write(pages_details)
-
-                        page = ""
+        print("Category " + catName + " : done.")
