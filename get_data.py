@@ -84,17 +84,5 @@ def get_all_data(soup):
     # Get Image link
     imglink = get_imglink(soup)
 
-    # Test
-    #print('Link : ' + url)
-    print('Title : ' + title)
-    # print('UPC : ' + upc)
-    # print('Price excluding tax : ' + price)
-    # print('Price including tax : ' + pricetax)
-    # print('Number available : ' + availability)
-    print('Product description : ' + product_description)
-    print('Image link : ' + imglink)
-    print('Category : ' + category)
-    # print(review_rating)
-
     all_data = f"{title},{attributes},{product_description},{category},{review_rating},{imglink}"
     return all_data
