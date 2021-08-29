@@ -1,22 +1,21 @@
 # Script description :
 
 Browse all the category pages from http://books.toscrape.com/index.html to extract the following :  
-product_page_url  
-universal_ product_code (upc)  
-title  
-price_including_tax  
-price_excluding_tax  
-number_available
-product_description  
-category  
-review_rating  
-image_url  
+-Product page url  
+-Universal product code (upc)  
+-Title  
+-Price including tax  
+-Price excluding tax  
+-Number available  
+-Product description  
+-Category  
+-Review rating  
+-Image url  
 and download the associated cover image.
 
 
 
-# Script Installation :
-#### **Pre-requisite : [Python 3](https://www.python.org/downloads/)**
+# Script Installation (Example of Python 3) :
 
 
 Extract the repository's files in a folder of your choosing
@@ -60,8 +59,13 @@ pip(3) install -r requirements.txt
 
 
 
-You can now run the script :
+You can now run the script :  
+Windows
 ```
 C:\Folder\containing\py\files\projet-2.py
 
+```
+Unix/mac
+```
+python3 projet-2.py
 ```
